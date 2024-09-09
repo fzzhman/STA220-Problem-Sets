@@ -1,0 +1,379 @@
+---
+title: "STA220 Homework 4"
+author: "Michal Malyska & Vivian Ngo"
+date: "5/30/2020"
+output: 
+  pdf_document:
+    toc: true
+---
+\newpage 
+
+# Instructions
+
+1. Read the rest of the instructions carefully.
+
+2. First, replace the #XXXXXXX in Question 0 with your student number. 
+Click the green "play" button. That will generate the data for your homework.
+DO NOT share this data with anyone. 
+
+3. You can ignore the code below and proceed to Instruction 4
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE,
+					  message = FALSE,
+					  echo = FALSE)
+```
+
+4. You should submit the **.Rmd and the full .pdf** file on Quercus once you are done.
+
+5. You should submit the **individual question .pdf files** produced by knitting this homework and splitting **on Crowdmark**. The link will be provided to you. 
+
+\newpage 
+
+# Question 0
+
+```{r student-number-chunk, echo=TRUE}
+library(tidyverse)
+library(gridExtra)
+library(kableExtra)
+source(file = "secretsauce4.r")
+
+# Change your student number here
+my_student_number <- 1004975743
+# You've gone too far, change your student number above
+
+# Don't change the line below
+data <- secret_function(my_student_number)
+```
+
+\newpage
+
+# Question 1 (17 points)
+
+## Question 1.1 (9 points)
+
+You are interested in testing whether the grades in STA221 this term are higher than the historic average of 55. You post a survey on the course forum that allows students to enter their grades. You obtain 11 answers presented below:
+
+```{r Sampled Data}
+Q1 <- data$Q1
+cat(Q1$x)
+```
+
+Conduct a hypothesis test for this data and answer the following:
+
+* Is there anything worrisome about your data ?
+
+* What are the assumptions you are making ? Select one and explain how would you check it.
+
+* What is your test statistic ?
+
+* What distribution does it follow (include all the parameters) ?
+
+* What is the p-value of your test and the conclusion at an alpha level of 0.01 (1%)
+
+## Answer 1.1
+H_0: The mean this year is the same as the mean the year before
+H_A: The mean this year is higher than the mean before. 
+
+* The 28 can be considered an outlier score, as it is much lower than the average
+
+* The obsersvations are independent of one another. 
+  They are (approximately) normally distributed.
+  They have a similar amount of variance within each group being compared (a.k.a. homogeneity of variance).
+  
+  We can check that the observations are independent if we know that no students from last year are retaking the course this year. 
+
+* Mean = sum of all values/n
+       = 619/11
+       = 56.27273
+       
+  Standard Deviation (s) = 13.176
+  Since we follow a t-distribution for this data, we have to calculate the standard error(SE) to find the t-score.
+  Standard Error(SE) = s/squareroot(n)
+                     = 13.1764252291/3.31662479
+                     = 3.973
+                     
+  t-score = (sample mean - mu)/SE
+          = 56.27273 - 55/3.97284169
+          = 0.320357593
+          = 0.32036
+  
+* one=tailed t-distribution, since the alternative hypothesis is that  this year's mean is higher than previous years', so we will only consider the right side of the distribution curve. 
+
+  degrees of freedom(df) = n - 1 = 10
+  
+*  We can calculate p-value with the following code: pt(-0.32036, df = 10) 
+   p-value is 0.378
+   Conclusion: cannot reject null hypothesis because p > alpha(0.05).
+  
+## Question 1.2 (4 points)
+
+Is the following output consistent with your test? (You may ignore the confidence interval values)
+
+```{r T-test}
+t.test(Q1$x, alternative = "greater", mu = 55)
+```
+
+* Show how you could calculate the standard error from the output. Does it match 
+the number you calculated before?
+
+n = df + 1 = 11
+
+t-score    = 0.32036
+mean       = 56.27273
+(56.27273 - 55)/(SE) = 0.32036
+          1.27273/SE = 0.32036
+                  SE = 3.973
+SE = s/squareroot(n)
+SE = -13.1763262/3.31662479
+SE = -3.97281183
+
+## Question 1.3 (4 points)
+
+What is the difference between one and two sided hypothesis tests? Which one is usually preferred and why? (Max 4 sentences)
+
+## Answer 1.3
+Two tailed test will test for effects in both directions (when the alternative hypothesis suggests that the value being tested can be greater or lower than that in the null hypothesis), while the one-tailed test will test for affects in only one (when the value assumed in the alternative hypothesis is either higher or lower than that in the null hypothesis). Two tailed tests split alpha into two parts, and in one-tailed tests it is split into one part on one side of the distribution curve. A direction needs to be chosen in case of the one-tailed test, but not in the case of a two-tailed test. 
+
+\newpage
+
+# Question 2 (12 points)
+
+You work in a lab studying the reaction times of people in different circumstances. You are asked to help with a data problem. Your predecessor
+calculated the 95% confidence intervals for the mean reaction time, but your PI would like to know the 99% confidence intervals and the so-called
+"six sigma" confidence intervals. There is only one problem - You don't have access to raw data, you just know that the 95% confidence interval
+was the one below. You managed to dig out some old experimental documentation and noted down that the number of participants in the study was as indicated below. There was only one observation per participant.
+
+```{r Q2 data}
+Q2 <- data$Q2
+cat(" 95% Confidence interval: (", round(Q2$lower, 0),",", round(Q2$upper,0), ")\n")
+cat(" Number of participants: ", Q2$n)
+
+```
+
+
+## Question 2.1 (4 points)
+
+* What is the point estimate ?
+
+* What is the standard error ?
+
+## Answer 2.1 
+* 552 + x = 986 - x
+       2x = 434
+        x = 217
+  x is now the margin of error (MOE)
+  Point estimate = 552 + 217 = 769
+  
+* Standard Error * Z_(1-alpha/2) = 217 (MOE)
+                      SE * 1.96  = 217
+                            SE   = 110.714
+                            
+## Question 2.2 (5 points)
+
+* What is the 99% confidence interval ?
+
+A "six sigma" confidence interval is a confidence interval corresponding to an alpha level equal to the probability of finding an observation more than
+6 standard deviations away in a standard normal distribution
+
+* What is the alpha level for six sigma confidence intervals ?
+
+* What is the six sigma confidence interval for your data ?
+
+## Answer 2.2
+
+Z_(1-(alpha/2)) = 2.807034
+
+Point Estimate will remain the same, 769
+SE will remain the same, 110.714
+
+Confidence Interval = (769-(SE * 2.81), 769+(SE * 2.61))\
+                    = (769 - 311.10634, 769 + 311.10634)
+                    ~ (458, 1080)
+                    
+For the six-sigma confidence interval, since it is 6 standard deviations away from the mean, our t-score will be 6. Alpha is the probability of rejecting the null hypothesis, so we can determine alpha using the probability of rejecting the null hypothesis. Using the code 2*pt(-6, df = 23), we get the probability 2.028433e-06. 
+So, alpha = 2.028433e-06
+                    
+Confidence interval for six-sigma = (PE - 6SE, PE+6SE)
+                                  = (769 - 664.28400, 769 + 664.28400)
+                                  = (104.72, 1433.28)
+## Question 2.3 (3 points)
+
+Suppose it is widely known that the standard deviation of human reaction time in miliseconds is 130. How would that change your 99% confidence interval?
+
+## Answer 2.3 
+A smaller standard deviation would result in a smaller 99% confidence interval, since the standard error would also decrease significantly, which would result in a smaller margin of error. 
+
+\newpage
+
+# Question 3 (12 points)
+
+Suppose you want to know what the average weight for dogs is. Your friend Angila told you that the average dog's weight is 45 lbs. You want to test whether or not this is true. 
+
+## Question 3.1 (2 points)
+
+What are your hypotheses? Clearly define your variables and state your hypothesis in mathematical terms and in words. 
+
+## Answer 3.1
+Null Hypothesis (H_0): The average dog's weight is 45 lbs. mu = 45 
+Alternative Hypothesis(H_A): The average dog's weight is not 45 lbs.                                          mu!= 45
+
+## Question 3.2 (7 points)
+
+Conduct a hypothesis test at the alpha level given the following data. Clearly state your test statistic, the distribution under the null hypothesis, p-value, and conclusion. From the table below, you have sampled the weights of J dogs, found an average weight of K lbs from these dogs, and a sample standard deviation of L. 
+
+```{r}
+Q3 <- data$Q3
+kable(Q3)
+```
+## Answer 3.2
+Since J=n=100 for this data, we can use a normal distribution instead of a t-distribution because of the larger sample size. 
+Since we are using a normal distribution under the Null Hypothesis, we will have to calculate the Z-score as follows:
+SE = sd/squareroot(n)
+SE = 0.8
+
+Z-score = 47-45/0.8
+        = 2.5
+        
+Alpha = 0.05
+This is a two tailed test, since the alternative hypothesis includes the cases where the true mean is both greater than or less than 45 lbs.
+ 
+P-value = 2*(1-pnorm(xbar=47,mean=45,sd=8/sqrt(100)))
+        = 0.01241933
+Therefore, since p-value < alpha = 0.05, we can reject the null hypothesis.
+
+## Question 3.3 (3 points)
+
+Suppose you wanted to test if average dog weight is greater than 45lbs. What would your hypotheses be instead? What would your conclusion be, based on the same data?
+
+## Answer 3.3
+
+The null hypothesis would remain the same. 
+The alternative hypothesis (H_A) would change as such: The average dog's weight is greater than 45 lbs (mu > 45).
+
+This is an example of a one-tailed hypothesis test, since we are only interested in the probability of the mean being greater than the sample mean. 
+
+Since the z-score and alpha value will remain the same, the only thing that wil change is the p-value because it is a one-tailed test. The p-value would be 0.5 times that of the two-tailed hypothesis test, since we are only looking at one tail of the normal distribution curve. Therefore the new p-value is 0.401294, and p-value>alpha(0.05), so we cannot reject the null hypothesis. 
+
+\newpage
+
+# Question 4(15 points)
+
+You would like to know whether or not twins on average grow to be the same height. So, you surveyed a random sample of twins and these are the results that you got are below, where:
+
+- A denotes the group of older twins in your survey (born first)
+- B denotes the group of younger twins in your survey (born second)
+- Abar is the average height of the older twins in your survey
+- Bbar is the average height of the younger twins in your survey
+- Dbar is the average of the differences in heights of the twins (twin A - twin B) in your survey
+- A_s is the sample standard deviation of heights of the older twins in your survey
+- B_s is the sample standard deviation of heights of the younger twins in your survey
+- D_s is the sample standard deviation of the differences in heights of the twins in your survey
+- alpha is the alpha level you will use in your hypothesis test
+- n_total is the toal number of people in your survey (old and young twins, all combined)
+
+```{r}
+Q4 <- data$Q4
+kable(Q4)
+```
+
+## Question 4.1 (3 points)
+
+What are your hypotheses? What type of test should you conduct? Clearly define any variables you use.
+
+## Answer 4.1
+Let mu_diff = D_bar
+n = total observations/2 = 450
+This data has a 1-to-1 mapping from one dataset to another, since we have two observations per twin-set, so the data is paired. Therefore, the null hypothesis is under the paired data t-test.
+
+Null Hypothesis (H_0): The difference in the height of the twins is 0. mu_diff = 0
+Alternative Hypothesis(H_A): The difference in the height of the twins is not 0. mu_diff != 0
+
+## Question 4.2 (7 points)
+
+Conduct a hypothesis test (using p-values) based on the data above. What is your conclusion? Include all appropriate steps!
+
+## Answer 4.2
+
+Standard Error(SE)= Standard Deviation(D_s)/squareroot(n=450)
+                  = 1.80/21.2132034
+                  = 0.0848528139
+    
+t-score = D_bar - mu_diff/SE
+        = -0.06 - 0      / 0.0848528139
+        = -0.707
+        
+This is a two-tailed t-test, since the alternative hypothesis refers to both cases where the difference in height is negative (i.e, group A which denotes the older twins grow to be shorter than group B, the younger twins) and height is positive(group A grows to be taller than group B).
+
+P-value = 2*pt(t-score = 0.707, df = 449)
+        = 2*0.2399335
+        = 0.480
+        
+P-value is greater than alpha(0.05), therefore we cannot reject the null hypothesis.
+
+## Question 4.3 (5 points)
+
+Describe an example scenario not mentioned in lecture or in the homework assignment where you would apply the same statistical test that you used in this question. Include as much detail as you can about how you would conduct the test.
+
+## Answer 4.3
+
+I want to test whether there is a difference between people's typing times (which are measured using an online game which flashes colours on the screen and requires the participants to type them out, and measure the time it takes for each participant to type them out) in the mornings (8 am) and the afternoons (3 pm). I will record the data from 11 different people for the two different reaction times, so will have 22 observations in total. My null hypothesis would be that there is no difference in reaction times between 8 am and 3 pm, and my alternative hypothesis would be that there is a difference in reaction time. I will keep the alpha as 0.1, to indicate a 90% confidence interval. I will use the same paired t-test techniques on my data as I have demonstrated in answers 4.1 and 4.2. 
+
+\newpage
+
+# Question 5 (14 points)
+
+We know that different courses are typically studied by different people but we want to test this more rigourously. Suppose you collect data on students in STA442 and in STA220 and you want to study any patterns in the proportions of students with glasses. Your data is below.
+
+```{r}
+Q5 <- data$Q5
+kable(Q5)
+```
+
+## Question 5.1 (7 points)
+
+Construct an 88% confidence interval for the difference in proportions of people with glasses (Use this specific order: Proportion of people with glasses in STA442 - Proportion of people with glasses in STA220). Include all relevant steps and details! 
+
+## Answer 5.1
+
+alpha = 1 - 0.88 = 0.12
+n_1 = total number of people in STA442 = 233 + 270 = 503
+n_2 = total number of people in STA220 = 167 + 190 = 357
+n   = n_1 + n_2 = 860
+p_1hat = people in STA442 who wear glasses/total STA422 = 233/503
+p_2hat = people in STA220 who wear glasses/total STA220 = 167/357
+Point estimate = p_diff 
+               = p_1hat - p_2hat
+               = -0.00457
+       
+Standard Error (SE) = squareroot(p1_hat(1-p_1hat)/n_1 +                                                 p_2hat(1-p_2hat)/n_2)
+                    = squareroot((233/503 * 270/503)/503 + 
+                                 (167/357 * 190/357)/357)
+                    = 0.0345210379
+                    = 0.0345
+                    
+Confidence Interval = (p_diff + (SE * Z_1-alphe/2), 
+                       p_diff - (SE * Z_1-alpha/2))
+                   
+                    = (-0.00457-(0.0345*1.55), -0.00457+(0.0345*1.55))
+                      (-0.058 , 0.049)
+                      
+                      
+## Question 5.2 (7 points)
+
+Conduct a hypothesis test (using p-values) to see whether or not the proportions (of people with glasses) is the same for STA442 and STA220. Include all relevant steps and details! Use an alpha level of 0.05.
+
+## Answer 5.2 
+
+Using the same variables as defined in answer 5.1:
+
+Null Hypothesis: The proportions of people with glasses is the same for STA442 and STA220. p_1hat - p_2hat = 0
+
+Alternative Hypothesis: The proportions of people with glasses is different for STA442 and STA220. p_1hat - p_2hat != 0
+
+Z-score = -0.7096
+P-value at alpha = 0.05 is .4777
+P-value > Alpha(0.05), therefore we cannot reject the null hypothesis.
+We conclude thet the proportion of people with glasses is the same for both STA442 and STA220.
+
+

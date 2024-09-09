@@ -1,0 +1,361 @@
+---
+title: "STA220 - Homework 1"
+subtitle: "Due at 11:59PM on Sunday May 17th"
+author: "Michal Malyska & Vivian Ngo"
+date: "10/05/2020"
+output: pdf_document
+---
+
+\newpage 
+
+# Instructions
+
+1. Before starting, read the rest of the instructions carefully.
+
+2. First, replace the XXXXXXX in Question 0 with your student number. 
+Click the green "play" button. That will generate the data for your homework.
+DO NOT share this data with anyone. 
+
+3. You can ignore the code below and proceed to instruction number 4.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE,
+					  message = FALSE,
+					  echo = FALSE)
+```
+
+4. Whenever you encounter "YOUR NAME" or "YOUR STUDENT NUMBER" or "X" in a code chunk 
+please fill it in according to the instructions. This happens in Questions 0, 1, 2, and 5. 
+
+5. Before submitting, ensure that all the plot titles have been filled in as per above.
+
+6. You should submit the .Rmd file on Quercus once you are done.
+
+7. You should submit the .pdf file produced by knitting this homework with your answers on Crowdmark. The link will be provided to you on Quercus. 
+
+# Question 0
+
+```{r student-number-chunk, include=TRUE, echo=TRUE}
+# Dont change these lines
+library(tidyverse)
+source(file = "secretsauce.r")
+# Don't change the lines above
+
+# Change your student number here
+my_student_number <- 1004975743
+# You've gone too far, change your student number above
+
+# Don't change the line below
+data <- secret_function(my_student_number) # don't change this line
+```
+
+\newpage
+
+# Question 1 (12 points)
+
+You have joined the OISE lab focusing on higher education. You are told you will be
+focusing on what people choose to study during their undergraduate degrees. You are told
+your team conducted an initial small sample study by calling some of their friends
+from three universities and asking which department they belonged to.
+
+
+```{r q1-plot}
+Q1 <- data$Q1
+```
+
+Consider the following ten observations from your data: 
+
+```{r q1-head}
+Q1.1 <- head(Q1$Department, n = 10)
+print(Q1.1)
+```
+
+## Question 1.1 (3 points)
+
+If this was the only data you had, what would you estimate the proportion of Psychology students
+across the three universities to be? Explain (Max 2 sentences).
+
+## Answer 1.1
+My answer to Question 1.1 is that the proportion of Psychology students is 2/10 because there are 10 majors in the data given, 2 of which are Psychology.
+
+## Question 1.2 (3 points)
+
+If you knew that in Canada 40% of people have a university degree, what would be the
+estimated proportion of all people in Canada with a Computer Science Degree? Do you think
+your estimate is good? Explain your reasoning. (Max 3 sentences).
+
+## Answer 1.2
+According to the data given in Q1 the proportion of all people in Canada with a Computer Science degree would be 0, since there is no representation for the Computer Science department according to the data. However, this estimate is definitely false because the Computer Science major is a popular major, but the dataset is very limited according to the number of students interviewed and the number of universities when compared to how a sizeable portion of Canadians (40%) have a university degree. Therefore, the estimate is not good. 
+
+## Question 1.3 (6 points)
+
+You decided that you would like to know a bit more about how many people studied in which departments 
+so you send out a survey to students and alumni of three universities in Canada asking which
+department they studied in. What type of study is this? After you collected the responses
+(1500) you decided to make a barplot of your observations. What does it tell you? (Max 5 sentences).
+
+```{r q1-barplot}
+Q1 %>%
+	ggplot(aes(x = Department, fill = Department)) +
+	geom_bar() + 
+	theme_minimal() +
+	ggtitle("Distribution of Student Departments as collected by Fizzah Mansoor") +
+	theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "none")
+	
+```
+
+
+## Answer 1.3
+
+The type of study is an observational study.
+
+The plot shows that the ranking of each department according to population is as follows: Economics (approx 395 students), Math(approx 310 students), Statistics(approx 250 students), Computer Science(approx 170 students), Sociology(approx 160 students), Kinesiology(approx 105 students), and Psychology(approx 100), with Economics having the highest number of students and Psychology the lowest. 
+
+\newpage 
+
+# Question 2 (20 points)
+
+Suppose you are a researcher for the government and you are assigned a project that focuses on environmental sustainability. LED lightbulbs are known to be eco-friendly as they are more energy-efficient than other types of lightbulbs. Your manager is interested in the number of LED lightbulbs that Ontario homes each have. 
+
+```{r q2-data}
+Q2 <- data$Q2 
+```
+
+
+## Question 2.1 (4 points)
+
+What is your population of interest in this question? Do you think it is possible to collect data from this entire population? What do you think would make for a good sample and why? (Max 4 sentences).
+
+## Answer 2.1
+The population of interest in this question is the people who live in Ontario homes, who will be the subjects of the observational study. It is not possible to collect data from the entire population because Ontario has a very large population. A good sample would be a proportion of people from each of the major city centers in Ontario according to the ratio of the city's population to that of the province of Ontario. This would be a good sample because it would have enough of a representative population since different regions will be relatively well represented in the data, and also minimuze research and time costs. 
+
+
+## Question 2.2 (4 points)
+
+Suppose you sampled 1000 homes and this is the distribution of LED bulbs per home that you found. Provide the five-number summary based on the boxplot below. (Provide what each statistic is called and the approximate value of it in this sample).
+
+```{r q2-boxplot, fig.height=4}
+Q2 %>% ggplot(aes(y = LEDs)) + geom_boxplot() +
+	labs(title = "Distribution of LEDs per home as collected by Fizzah Mansoor") +
+	scale_y_continuous(breaks = round(seq(min(Q2$LEDs), max(Q2$LEDs), by = 2), 1)) +
+	xlab("") +
+	theme_minimal() +
+	theme(
+		axis.title.x = element_blank(),
+		axis.text.x = element_blank(),
+		axis.ticks.x = element_blank()
+	)
+```
+
+## Answer 2.2
+Minimum = 0
+First Quartile = 1
+Median = 2
+Third Quartile = 3
+Maximum = 18
+
+## Question 2.3 (4 points)
+
+Below is a histogram overlayed with a density plot for your observations. What does the box plot do better than the histogram, and vice versa? (Max 3 sentences).
+
+```{r q2-histogram}
+Q2 %>% ggplot(aes(x = LEDs)) +
+	geom_histogram(aes(y = ..density..),
+				   colour = "black",
+				   fill = "white",
+				   bins = 20) +
+	geom_density(alpha = .2, fill = "#FF6666", bw = 1) +
+	theme_minimal() +
+	labs(title = "Distribution of LEDs per home as collected by Fizzah Mansoor")
+```
+
+## Answer 2.3 
+The boxplot conveys the first and third quartiles and the median better than the histogram. The histogram conveys the density plot, that is, the distribution of the number of LEDs in the number of homes, better than the box plot. The box plot also displays the outlier data (the unique households which have a much greater number of LEDs than the median amount) more coherently than the histogram does.
+
+## Question 2.4 (5 points)
+
+Comment on the shape of the distribution. Try to include as much detail as possible. Remember to relate your insights back to the context of your data. (Max 4 sentences).
+
+## Answer 2.4
+The tail of the density plot is towards the right side of the graph, which indicates that the data is right skewed; that is, the mean is smaller than the median for the number of LEDs per home. The distribution also indicates that the data is unimodal, that is, there is one single highest value (or mode) of roughly 2.5 LEDs at 0.3 density within the whole dataset. 
+
+## Question 2.5 (3 points)
+
+Your manager has asked for a one-number central statistic to summarize this whole dataset. What statistic would you use and why? (Max 3 sentences).   
+
+## Answer 2.5
+The mode of the dataset, which can be observed at the peak of the density plot, is the main statistic that will summarize this data set. This is because the mode reflects the most frequently occuring data point, and that is 2.5 LED bulbs in each house. This is a central statistic because it reflects the environmental impact of the province as a whole, as this statistic can be compared to pollution statistics of the entire province. 
+
+\newpage 
+
+# Question 3 (18 points)
+
+```{r q3-data}
+Q3 <- data$Q3
+```
+
+You are a medical director and would like to collect information on the age demographics of people in the hospital.
+
+Below is a contingency table of the data.
+
+```{r q3-contingency}
+x <- table(Q3)
+addmargins(x)
+```
+
+## Question 3.1 (2.5 points)
+
+Given the contingency table above, fill in the relative frequencies (a, b, c, d, e) in the contingency table presented below. (Write your answer in fractional form, do not simplify).
+
+```{r}
+y <-
+	data.frame(matrix(
+		c("--", "6/1000", "--", "253/1000", "--", "--", "168/1000", "--", "740/1000", "--", "--", "1000/1000"),
+		nrow = 4
+	))
+colnames(y) <- c("Hospital A", "Hospital B", "Sum")
+rownames(y) <- c("Adults", "Children", "Seniors", "Sum")
+y
+```
+
+## Answer 3.1
+a : 6/1000 
+b : 253/1000 
+c : 168/1000 
+d : 740/1000 
+e : 1000/1000 
+
+## Question 3.2 (3 points)
+
+What is the marginal distribution of hospitals? (Write your answer in fractional form, do not simplify).
+
+## Answer 3.2
+Hospital A: 253/1000 
+Hospital B: 747/1000 
+
+## Question 3.3 (4.5 points)
+
+What is the conditional distribution of Age groups given Hospital B? (Leave answers in __fractional__ form, do not simplify).
+
+## Answer 3.3 
+Hospital B Adults: 548/747 
+Hospital B Children: 31/747 
+Hospital B Seniors: 168/747 
+ 
+
+## Question  3.4 (8 points)
+
+In addition, you want to look for a hospital with the best surgical success rates.
+
+Below is a table of the surgical success rates for two hospitals in 2018 and 2019. The numerator is the number of successful surgeries and the denominator is the total surgeries done. Does your data demonstrate Simpson's paradox? Explain and show calculations. (Max 4 sentences).
+
+```{r}
+Q3_2 <- data$Q3_2
+rownames(Q3_2) <- c("2018", "2019")
+data.frame(Q3_2)
+```
+
+## Answer 3.4
+Hospital A has a total of 278/350 successful surgeries, and Hospital B has a total of 284/350 successful surgeries. According to this method, However, in 2018 A has an 86.21% success rate while B has an 84.32% success rate, and in 2019 A has a 75.29% success rate while B has a 70.73% success rate. This is an instance of Simpson's paradox, which states that when looking at the statistical scores of groups, these scores may change, depending on whether the groups are looked at one by one, or if they are combined into a larger group. This data does demonstrate Simpson's paradox, since the combined figures show Hospital B to be a more successful hospital than hospital A, while the oppposite is true when the data is compared year by year. 
+
+\newpage 
+
+# Question 4 (14 points)
+
+Suppose you are running a clinical trial to test your new drug for weight loss. You have one control group which recieves a sugar pill (placebo), one treatment group which is given the current most popular weight loss drug (drug A), and your new drug (drug B). The participants in this clinical trial were given these drugs for a period of 3 months and you recorded their change in weight (e.g. -5 means that they lost 5 pounds by the end of the trial).
+
+```{r q4-data}
+Q4 <- data$Q4
+```
+
+## Question 4.1 (3 points)
+
+What type of study is this? Why? (Max 2 sentences).
+
+## Answer 4.1
+Experimental, because researchers have introduced an intervention(Drug B, and comparing its effectiveness with that of drug A), and there is also a control (the placebo pill) to compare the experimental data to. 
+
+## Question 4.2 (8 points)
+
+Below are some visualizations of the data. Comment on the effectiveness of the treatments compared to each other and to the placebo. Remember to use keywords from the class to support your answer and include details such as the consistency of results and which treatment (or placebo) you think works better. Based on this data, what would you recommend to someone who is trying to lose weight? (Max 5 sentences).
+
+## Answer 4.2
+Drug A is the only one which consistently results in a negative weight gain, and the majority of patients lose weight within a narrow margin, indicating effectiveness. In comparison to Drug A, Drug B is not an efficient treatment because it results in a positive weight gain for nearly all participants, as the median is well above 0 weight change. The placebo is an effective control for the experiment because it does not effect the weight of the participants a substantial amount, and shows the trends for people who do not consume any kind of weight loss drugs. Therefore, Drug A is the most effective, since it is the only drug which consistently results in weight loss for nearly all participants.
+
+```{r, fig.height=4}
+library(gridExtra)
+p1 <- Q4 %>% ggplot(aes(x = Group, y = Weight_Change)) +
+	geom_boxplot() +
+	theme_minimal()
+p2 <- Q4 %>% ggplot(aes(x = Weight_Change, color = Group)) +
+	geom_density() +
+	theme_minimal()
+grid.arrange(p1, p2, nrow = 1, top = "Weight Changes by Treatment Group")
+```
+
+## Question 4.3 (3 points)
+
+From this data, do you think that weight change and treatment group are independent variables? Why or why not? (Max two sentences).
+
+## Answer 4.3
+Weight change and treatment group are not independent variables, as the weight change does vary according to the treatment group. The weight change for those patients consuming the placebo is minimal, with the median staying near 0, while that for Drug B is greater than 0, indicating most participants gained rather than lost weight while on this drug, and for the original drug A, all participants lost weight within a narrow margin. 
+
+\newpage 
+
+# Question 5 (11 points)
+
+## Question 5.1 (4 points)
+
+```{r scatterplot-52, echo=FALSE}
+df5 <- data$Q5
+df5 %>% 
+	ggplot(aes(x = x, y = y)) +
+	geom_point() + 
+	theme_minimal() +
+	ggtitle("The third-last digit of my student number is: 7")
+```
+
+Take a look at the scatterplot of your data presented above. Choose a variable 
+and describe (in max 3 sentences but including as much detail as possible)
+the marginal distribution of that variable. 
+
+## Answer 5.1
+
+Selected variable : y
+
+Description : range of values is from 25 to 200 (exclusive). Most of the data points are concentrated where y = 150. 
+
+## Question 5.2 (4 points)
+
+Suppose you computed the standard deviations of both of your numeric variables,
+and you noticed that both of them are very close to 0. Is covariance going to
+be higher or lower than the correlation in terms of magnitude? Explain your
+reasoning. (Max 3 sentences).
+
+## Answer 5.2
+The correlation will be larger than the covariance. The formula of the correlation has the product of the standard deviations of both variables in the denominator, and therefore it will be larger than the covariance, which has the standard deviations in the numerator in its formula. Therefore, the numerical value of the correlation will be greater than that of the covariance.
+
+## Question 5.3 (3 points)
+
+Of the two plots below, which one demonstrates stronger correlation?
+
+## Answer 5.3
+Plot 1 demonstrates a stronger correlation because the data points are more closely aligned than those in Plot 2, which are spread out over a wider area.
+
+```{r echo=FALSE}
+df54 <- data$Q54
+df54 %>% 
+	ggplot(aes(x = x1, y = y1)) +
+	geom_point() +
+	theme_minimal() +
+	ggtitle("Plot 1")
+
+df54 %>% 
+	ggplot(aes(x = x2, y = y2)) +
+	geom_point() +
+	theme_minimal() +
+	ggtitle("Plot 2")
+```
+
+
+

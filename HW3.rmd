@@ -1,0 +1,426 @@
+---
+title: "STA220 - Homework 3"
+subtitle: "Due at 11:59PM on Sunday May 31st"
+author: "Vivian Ngo and Michal Malyska"
+output: 
+  pdf_document:
+    toc: TRUE
+
+---
+
+\newpage 
+
+# Instructions
+
+1. Read the rest of the instructions carefully.
+
+2. First, replace the #XXXXXXX in Question 0 with your student number. 
+Click the green "play" button. That will generate the data for your homework.
+DO NOT share this data with anyone. 
+
+3. You can ignore the code below and proceed to Instruction 4
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE,
+					  message = FALSE,
+					  echo = FALSE)
+```
+
+4. You should submit the .Rmd file on Quercus once you are done.
+
+5. You should submit the .pdf file produced by knitting this homework with your answers on Crowdmark. The link will be provided to you. 
+
+6. Please submit the individual questions as separate .pdf (or .jpg or .png) files on Crowdmark in addition to the full PDF.
+
+\newpage 
+
+# Question 0
+
+```{r student-number-chunk, echo=TRUE}
+library(tidyverse)
+library(gridExtra)
+library(kableExtra)
+source(file = "secretsauce3.r")
+
+# Change your student number here
+my_student_number <- 1004975743
+# You've gone too far, change your student number above
+
+# Don't change the line below
+data <- secret_function(my_student_number)
+```
+
+\newpage
+
+# Question 1 (28 points)
+
+## Question 1.1 (10 points)
+
+Describe what you see on the two QQ plots below. (2 sentences each) (2 points each)
+
+Would you say either of the underlying datasets could be approximated with a normal distribution? (2 sentences each) (2 points each)
+
+Would mean be a good measure of center for the underlying datasets? Explain your reasoning. (1 sentence each) (1 point each)
+
+```{r QQplots Q1}
+Q1 <- data$Q1
+
+p1 <- Q1 %>% ggplot(aes(sample = x)) +
+	geom_qq() +
+	geom_qq_line() +
+	theme_minimal() +
+	ggtitle("PLOT 1 for FIZZAH MANSOOR")
+
+p1 
+
+p2 <- Q1 %>% ggplot(aes(sample = y))  +
+	geom_qq() +
+	geom_qq_line() +
+	theme_minimal() +
+	ggtitle("PLOT 2 for FIZZAH MANSOOR")
+
+p2 
+```
+## Answer 1.1
+
+PLOT 1: this graph is from a normal distribution, because the data closely aligns with the line y=x. 
+
+PLOT 2: this graph has 'steps' of data points, indicating discrete data points. most of the points still lie on or are symmetrical about y=x, therefore this graph is also from a normal distribution with discrete data points. 
+
+## Question 1.2 (6 points) 
+
+Now assuming that both datasets above actually are well approximated with a normal distribution (whether that was your conclusion or not) compute Z-scores for the maximum and minimum observations from each dataset. Which observation is the most extreme? Show all of your calculations.
+
+```{r Datasets Q1}
+cat("DATASET 1: \n")
+cat(round(sort(Q1$x), digits = 2), "\n", "\n")
+cat("DATASET 2: \n")
+cat(round(sort(Q1$y), digits = 2), "\n", "\n")
+```
+## Answer 1.2 
+mean for DATASET 1 = -0.159
+mean for DATASET 2 = 10.257
+sd for DATASET 1 = 3.780
+sd for DATASET 2 = 2.924
+
+Z-Score Formula = (x-mean)/standard deviation
+
+Z-Score for minimum of DATASET 1 = -7.76 - (-0.159)/3.780
+                                 = -82.8411428572/3.780
+                                 = -2.011
+                                 
+Z-Score for maximum of DATASET 1 = 10.18 - (-0.159)/3.780
+                                 = 2.735
+
+Z-Score for minimum of DATASET 2 = 4 - (10.257)/2.924
+                                 = -2.140
+                                 
+Z-Score for maximum of DATASET 2 = 16-(10.257)/2.924
+                                 = 1.964
+
+
+## Question 1.3 (12 points)
+
+Keeping the assumption that the datasets above are from a normal distribution what would be the following for each of the datasets:
+
+* $P(X < 0)$ 
+
+* $P(X > 1)$
+
+* $P(0 < X < 1)$
+
+* $P(X < 5)$
+
+* $P(2X < 1)$
+
+* $P((3X - 5) > 1)$
+
+## Answer 1.3
+
+* DATASET 1 X<0 Z-score = (0 - (-0.159))/3.780 = 0.04
+  DATASET 1 P(X<0.04) =  0.4841
+
+  DATASET 2 X<0 Z-score = (0 - (10.257))/2.924 = -3.51 
+  DATASET 2 P(Z<-3.51) = 0 (Z=3.51 exists outside the normal distribution)
+                        
+* DATASET 1 X>1 Z-score = (1-(-0.159))/3.780 = 0.31
+  DATASET 1 P(Z>0.31) = 1 - 0.6217
+  
+  DATASET 2 X>1 Z-score = (1-10.257)/2.924 = -3.17
+  DATASET 2 P(Z>-3.17) = 1 - 0.0008 = 0.9992
+  
+* DATASET 1 P(0.04 < Z < 0.31) = P(Z<0.31) - P(Z<0.04)
+                               = 0.6217    - 0.4841
+                               = 0.1376
+                               
+  DATASET 2 P(-3.51 < Z < -3.17) = P(Z < -3.17) - P(Z < -3.51)
+                                 = 0.0008 - 0 
+                                 = 0.0008
+                                 
+* DATASET 1 X<5 Z-score = 5 + 0.159/3.780 = 1.36
+  DATASET 1 P(Z<1.36) = 0.9131
+  
+  DATASET 2 X< 5 Z-score = 5 - 10.257/2.924 = -1.80
+  DATASET 2 P(Z<-1.80) = 0.0359
+  
+* DATASET 1 2X < 1 Z-score = X < 0.5 = 0.5+.159/3.78 = 0.17
+  DATASET 1 P(Z < 0.17) = 0.5675
+  
+  DATASET 2 2X < 1 Z-score = X < 0.5 = 0.5-10.257/2.924 = -3.34
+  DATASET 2 P(Z < -3.34) = 0.0004
+  
+* DATASET 1 3X - 5 > 1 Z-score = X > 2 = 2+.159/3.78 = 0.57
+  DATASET 1 P(Z > 0.57) = 1 - 0.7157 = 0.2843
+  
+  DATASET 2 3X - 5 > 1 Z-score = X > 2 = 2 - 10.257 = -2.82
+  DATASET 2 P (Z > -2.82) = 1 - 0.0024 = 0.9976
+                                
+\newpage 
+
+# Question 2 (15 points)
+
+Serena is so tired of staying inside her house during quarantine that she has started to explore her garden and some fields near her house. Using 4 straws, Serena build a 10cm by 10cm square frame and tosses this frame onto the grass. She then takes note of whether or not there are dandelions in the frame.
+
+## Question 2.1 (2 points)
+
+This is your data: 
+
+```{r}
+Q2 <-data$Q2
+Q2
+```
+
+Suppose that she tossed her square frame onto X different patches of grass and Y of them dandelions in the frame. She wants to make a single estimate of the proportion of grass that contains dandelions. What should her estimate be? What kind of estimate is this? 
+
+## Answer 2.1 
+Estimate = Number of patches with dandelions/Total number of patches
+         = 23/80
+         = 0.2875
+
+## Question 2.2 (8 points)
+
+What distribution does the _sample proportion of grass with dandelions_ approach, approximately? (If you do not know the true parameters, estimate them using the data that you have). Remember to state any theorem and check any assumptions that you use.
+
+## Answer 2.2
+For sufficiently large sample size (in this case, n>30, therefore n is large), the probability distribution of sample means is approximately normal, regardless of the probability distribution of the individual observations (Central Limit Theorem). 
+The _sample proportion of grass with dandelions_ has two possible outcomes: p= 0.2875, which is the proportion of grass patches with dandelions, and q = 1-p = 0.7125, which is the proportion of grass patches without dandelions. This situation can be approximated using the normal to Binomial distribution, since it has repeated, independent and identical Bernoulli trials. The distribution can be described as Dandelions~(0.2875, 80).
+According to the Central Limit THeorem, since the sample observations are independent and the n is sufficiently large, we can establish the following parameters: 
+        mean = p = 0.2875
+        variance = pq/n = 0.2875*0.7125/80 = 0.00256
+
+
+## Question 2.3 (5 points)
+
+What is the standard error of her estimate, based on the previous questions? Using all the data you have collected so far, build a Z% confidence interval for the sample proportion of grass with dandelions (show your work). What can you conclude from this?
+
+## Answer 2.3
+
+Standard Deviation = Squareroot(variance)
+                   = 0.051
+                   
+Standard Error = SD/squareroot(n)
+               = 0.00570197334
+               
+Z-score of 1-(alpha/2) = Z-score of 0.825
+                       = 0.93
+                       
+Margin of Error = SE * Z-score
+                = 0.051 * 0.93
+                = 0.047
+                
+Confidence Interval = (point estimate - MOE, point estimate + MOE)
+                    = (0.2405, 0.3345)
+                    
+We can conclude that we are 85% sure that our true value lies between this confidence interval.
+
+\newpage 
+
+# Question 3 (14 points)
+
+Suppose that you are head of the Human Resources department and you want to see if the hiring committee is not performing under any biasedness. To test for biasedness, you created X fake resumes of equally qualified applicants, half of which were male and half of which were female. You then gave these resumes to your hiring managers and asked them which candidates they would hire. 
+
+This is your data: 
+```{r}
+Q3 <-data$Q3
+Q3
+```
+
+## Question 3.1 (4 points)
+
+Out of all X fake resumes, suppose that your hiring managers said yes to X/2 candidates. Let the random variable pobs indicate the proportion of females that were hired. (For example, if 100 females were hired and there were 250 females in total, then pobs = 0.4). In your study, you found that the proportion of females hired was Y. 
+
+To see if there is biasedness, you can perform a hypothesis test. What are your hypotheses? State them in both mathematical terms and in words.
+
+## Answer 3.1
+
+Null Hypothesis = There is no biasedness from the managers between hiring women and men. Mathematically, this can be described as |mu(Y) - mu(Y*)| = 0, and     p_0 = 0.5
+
+Alternative Hypothesis = There is biasedness from the managers when they are hiring women and men |mu(Y) - mu(Y*)| != 0, and p_0 != 0.5
+
+## Question 3.2 (7 points)
+
+Assuming that proportion of females hired follows a normal distribution, conduct a hypothesis test. What is your test statistic and p-value?
+
+## Answer 3.2 
+
+test-statistic = 0.9
+Since this is a binomial approximation to normal distribution, we can say that mean = p, and variance is p(1-p)/n, thus X(probability)~(0.5, 0.001) where n = 250, as there are 250 females in total and therefore the sd = squareroot(0.001) which is 0.0316
+
+Z-score = 0.9 - 0.5/0.0316
+        = 12.65
+p-value = 0
+
+
+## Question 3.3 (3 points)
+
+At a (100-Z)% alpha level, would you reject the null hypothesis? What do you conclude from this?
+
+## Answer 3.3 
+100-Z% = 8% = 0.08
+p-value < 0.07, therefore we reject the null hypothesis and conclude that there is some bias from the HR department when hiring. 
+
+# Question 4 (14 points)
+
+## Question 4.1 (8 points)
+
+Fully describe a scenario you have not seen in lecture/quiz in which you would want to conduct a hypothesis test for a proportion,
+include a detailed description of the test itself with all the necessary components.
+
+## Answer 4.1 
+
+
+The Director of Health for country X believes that more elderly people are testing positive for COVID-19 than people below age 60, even though the disease can infect anyone at any age. In a random sample of N patients who have tested positive, S of them are above the age of 60. In this scenario, the null hypothesis is that the proportion of patients over 60 who tested positive is p_0 = 0.3, and the alternative hypothesis is that patients over 60 who tested positive is p_0 > 0.4, making this a one tailed test, since the H_A only considers where patients above 60 are more likely to test positive than others. 
+
+For this scenario I will choose the significance level as alpha=0.05. Assuming a normal distribution, we will use the z-test to decide whether or not to reject  the null hypothesis. 
+
+The critical values we need are p^ (the true proportion according to the random sample), SE (Standard Error). 
+In this case, p^     = S/N
+              SE(p^) =  ([(p^)*(1-p^)]/N)^0.5
+              Z-score = (p^ - p_0)/SE(p^)
+                      = (p^ - 0.4)/SE(p^)
+
+Using the normal distribution table, determine Probability according to Z-score.
+              
+If P(Z > Z-score) < alpha, this is small enough for us to reject H_0, that is, we can reject the assumption/norm that p_0 = 0.4 of patients who tested positive for COVID-19 are over the age of 60. 
+                    
+
+## Question 4.2 (6 points)
+
+Imagine you collected the data for your test with the results in the table below. What is your conclusion?
+Which type of error is it possible you are making ?
+
+```{r }
+Q4 <- data$Q4
+kable(Q4)
+```
+## Answer 4.2
+
+p^ = 0.96
+SE(p^) = squareroot(0.96*0.04/25)
+       = 0.196
+       
+Z-Score = 0.96-0.4/0.196
+        = 2.86
+        
+P(Z>2.86) = 1 - 0.4979
+          = 0.5021
+        
+This value is much larger than alpha = 0.05, therefore we cannot reject the Null Hypothesis.
+
+
+\newpage 
+
+# Question 5 (16 points)
+
+## Question 5.1 (6 points)
+
+Suppose you are conducting a study to determine whether the proportion of female students in statistics is equal to 30% or not,
+and would like to estimate the required sample size
+before you actually start your experiment. Your PI tells you that you need 
+to have error margins for confidence levels as per the table below. What is the minimum
+sample size that ensures all of them are satisfied? Show all of your calculations and reasoning
+
+```{r Error Margins and Alphas}
+Q5 <- data$Q5
+kable(Q5)
+```
+## Answer 5.1
+
+To get the highest margin of error (MOE), we assume p to be 0.5
+For confidence interval of 83% with MOE 0.18:
+At confidence interval of 83%, alpha = 0.17, thus the z-score of 0.915 is 1.37
+Thus:
+    0.18 = (1.37)squareroot(0.5(1-0.5)/n)
+    n    = 14.5
+    n    = 15
+    
+For confidence interval of 80% with MOE 0.01:
+At confidence interval of 80%, alpha = 0.20, thus the z-score of 0.9 is 1.29
+Thus:
+    0.01 = (1.29)squareroot(0.5(1-0.5)/n)
+    n    = 4160.25
+    n    = 4160
+    
+For confidence interval of 100% with MOE 0.03:
+At confidence interval of 100%, alpha = 0.00, thus the z-score of 1.0 is 3.5
+Thus:
+    0.03 = (3.5)squareroot(0.5(1-0.5)/n)
+    n    = 3402.8
+    n    = 3403
+    
+    
+Therefore, the minimum data size such that all are satisfied is 4160
+
+    
+## Question 5.2 (6 points)
+
+Suppose you know you are sampling from data that follows a normal distribution with standard deviation 
+indicated below instead. What is the minimum sample size in this case for the table of error margins and alphas above?
+Show all of your calculations and assumptions. 
+
+```{r Normal Margins and SD}
+Q5sd <- data$Q5sd
+cat(Q5sd)
+```
+## Answer 5.2
+
+For a margin of 0.18,
+Margin = Z-score * SE
+    SE = (0.18/1.37)
+    SE = 0.131
+    
+SE = SD/(squareroot(n))
+n  = (SD/SE)^2
+n  = 47.2
+n  = 47
+
+
+For a margin of 0.01,
+Margin = Z-score * SE
+    SE = 0.01/1.29
+    SE = 0.0078
+    
+SE = SD/(squareroot(n))
+n  = (SD/SE)^2
+n  = 13,313.6
+n  = 13,479
+
+
+For a margin of 0.03
+Margin = Z-score * SE
+    SE = 0.03/3.5
+    SE = 0.0086
+    
+SE = SD/(squareroot(n))
+n  = (SD/SE)^2
+n  = 11,025
+
+Therefore the the minimum data size such that all are satisfied is 13,479.
+
+## Question 5.3 (4 points)
+
+Consider the scenario from Question 5.1 again. If instead you are told that the standard deviation is 0.09, do you need to conduct the sample size calculation?
+What would be the result of your study? Explain your reasoning. 
+
+## Answer 5.3
+

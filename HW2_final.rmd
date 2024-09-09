@@ -1,0 +1,287 @@
+---
+title: "STA220 - Homework 2"
+subtitle: "Due at 11:59PM on Sunday May 24th"
+author: "Vivian Ngo and Michal Malyska"
+output: pdf_document
+---
+
+\newpage 
+
+# Instructions
+
+1. Read the rest of the instructions carefully.
+
+2. First, replace the XXXXXXX in Question 0 with your student number. 
+Click the green "play" button. That will generate the data for your homework.
+DO NOT share this data with anyone. 
+
+
+3. You can ignore the code below and proceed to Question 0
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE,
+					  message = FALSE,
+					  echo = FALSE)
+```
+
+```{r Load}
+library(tidyverse)
+library(gridExtra)
+source(file = "secretsauce2.r")
+```
+
+4. You should submit the .Rmd file on Quercus once you are done.
+
+5. You should submit the .pdf file produced by knitting this homework with your answers on Crowdmark. The link will be provided to you. 
+
+# Question 0
+
+```{r student-number-chunk, echo=TRUE}
+# Change your student number here
+my_student_number <- 1004975743
+# You've gone too far, change your student number above
+
+# Don't change the line below
+data <- secret_function(my_student_number)
+```
+
+\newpage
+
+
+# Question 1
+
+Below is a probability distribution table for a random variable X. 
+
+```{r}
+Q1 <- data$Q1
+
+prob_table_q1 <- tibble(x = Q1$X, "P(X=x)" = Q1$px)
+prob_table_q1 %>% t() %>%
+  kableExtra::kable()
+```
+
+## Question 1.1
+
+What are the Expected Value and Variance of X ?
+
+## Answer 1.1
+
+E(X) = 5.955
+
+Var(X) = 7.702025
+
+
+## Question 1.2
+
+Now we have a new random variable $Y = X^2$. Fill in the probability distribution table for Y below. (*hint:* $P(Y = x^2) = P(X = x)$)
+Note that you might not need all the columns, if that is the case just leave them empty.
+
+## Answer 1.2
+
+| y      | 1 | 9 | 16 | 25  | 100  |
+|--------|---|---|---|---|---|---|
+| P(Y=y) | 0.05 | 0.05  | 0.2  | 0.4 | 0.3 |
+
+
+
+## Question 1.3
+
+What are the Exected Value and Variance of Y based on the probability table? 
+
+## Answer 1.3
+
+E(Y) = 43.7
+
+Var(Y) = 1395.61
+
+## Question 1.4 
+
+Now that you have calculated E(X), E(Y), Var(X), and Var(Y), evaluate the following:
+
+* E(2X) 
+
+* E(X + 2Y)
+
+* (E(X))^2 - E(Y) - Var(X)
+
+## Answer 1.4
+
+E(2X) = 11.91
+
+E(X + 2Y) = 93.355
+
+(E(X))^2 - E(Y) - Var(X) = E(X)^2 - E(Y) - E(X^2) + E(X^2)
+                         = E(X^2) - E(Y) 
+                         = E(Y) - E(Y)
+                         = 0 
+
+# Question 2 
+
+Suppose you are the medical director at a hospital and you want to see how well the current tests are able to detect diabetes. This is the data that you have so far: 
+
+```{r}
+Q2 <- data$Q2
+Q2
+```
+
+X% of the tests for diabetes are positive. Among those who tested positive, Y% of them actually had diabetes. For those who tested negative, Z% of them had diabetes.
+
+## Question 2.1 
+
+What is the probability of someone testing positive for diabetes if they truly have diabetes? What theorem did you use to answer this? 
+
+## Answer 2.1
+
+Bayes Theorem, which states P(A|B) = P(B|A)*P(A)/P(B)
+Let P(A) = X, P(B|A) = Y, P(B) = proportion of people who have diabetes 
+                          P(B) =(0.7* 0.75 + .3* 0.14)
+                          P(B) = 0.567
+
+Probability of someone testing positive for diabetes if they truly have diabetes:  
+                          P(A|B) = 0.75*0.70/0.567
+                          P(A|B) = 0.926
+
+## Question 2.2
+
+Based on the answer above, assuming that a test can either come out positive or negative, and that a person can either have diabetes or not, what is the probability of someone testing negative if they truly have diabetes? Why?
+
+## Answer 2.2
+
+Probability of someone testing negative if they truly have diabetes 
+                      =  1 - P(A|B)
+                      =  1 - 0.926
+                      =  0.074
+                      
+This is because according to the Bayes theorem, there is only one other conditional possibility if we know that B is still true, therefore 1 - P(A|B) gives the proportion of people who test negative and still truly have diabetes
+
+# Question 3
+
+Suppose Harsh is playing basketball with his friend Mandy when Mandy stops to ask Harsh to join a bet with her. Harsh is allowed 5 tries to score a three-point shot. If he gets 4 or 5 shots into the hoop, then he wins 20 dollars. Otherwise, he must give Mandy 15 dollars. 
+
+Harsh has been practicing his 3-pointer skills and these were his results last night (1 is a success, meaning that he got the 3-point shot and 0 is a failure): 
+
+```{r}
+Q3 <- data$Q3
+Q3
+```
+
+## Question 3.1 
+
+What probability distribution does each shot follow? What do you think is Harsh's probability of getting a 3-pointer, given the table above?
+
+## Answer 3.1 
+Bernoulli distribution, probability = (0 + 1 + 1 + 0 +0)/5 = 0.4
+
+## Question 3.2 
+
+Suppose you use the above value as the true probability of Harsh succeeding in a three-pointer shot. What probability distribution does Harsh's total number of successful shots follow? 
+
+What is the probability that Harsh wins the bet? Explain in words and with calculations. 
+
+## Answer 3.2: 
+Binomial Distribution. There are two ways for Harsh to win; either he scores 4 goals or 5 goals. Therefore, the Binomial distribution formula must be applied twice, once with n = 4 to reflect the situations where Harsh wins with 4 goals, and once with n = 5 when he wins with 5. 
+Therefore, take 5 as the total number of turns, and 4 as the minimum number of successful turns needed for Harsh to win. 
+            K=4 ~ Binom(0.4, 5) =  0.4^5 + (5C4* 0.6* 0.4^4)
+                                =  0.0870
+
+## Question 3.3 
+
+What is the expected change in Harsh's net worth that Harsh will encounter from this bet, given the calculations above? Based on this, should Harsh accept Mandy's challenge?
+
+## Answer 3.3: 
+Harsh is significantly more likely to lose money in this bet, as his chances of getting 4 or 5 goals is only 8.7%. He is therefore extremely likely to lose money and decrease his net worth, therefore he should not accept Mandy's challenge.
+
+# Question 4 
+
+Your friend Addy owns a burrito shop and wants to know how many people visit the restaurant from 3pm to 5pm. For a year, he tracked how many customers come in at that time, and these are the counts that he collected: 
+
+```{r}
+Q4 <- data$Q4
+p1 <-
+  ggplot() + aes(Q4$Burrito) + geom_histogram(binwidth = 1,
+                                              colour = "black",
+                                              fill = "white") +
+  ggtitle("Histogram of restaurant visits")
+p2 <- ggplot() + aes(Q4$Burrito) + geom_density() +
+  ggtitle("Density plot of restaurant visits")
+grid.arrange(p1, p2, nrow = 1)
+
+```
+
+## Question 4.1
+
+What do you think is a reasonable value for the mean and variance for the counts of customers that come in between 3pm and 5pm (round to the nearest integer)? What distribution do you think is appropriate to model this?
+
+## Answer 4.1
+Poisson Distribution is the most appropriate to model this. 
+Mean = 12
+Variance = 12
+
+## Question 4.2 
+
+Suppose Addy's brother Edward also owns a coffee shop. Edward thought Addy's idea was interesting so he also collected data on customers from 3pm to 5pm. These are the counts: 
+
+```{r}
+p1 <- ggplot() +
+  aes(Q4$Coffee) +
+  geom_histogram(binwidth = 1,
+                 colour = "black",
+                 fill = "white") +
+  ggtitle("Histogram of restaurant visits")
+
+p2 <- ggplot() +
+  aes(Q4$Coffee) +
+  geom_density() +
+  ggtitle("Density plot of restaurant visits")
+
+grid.arrange(p1, p2, nrow = 1)
+```
+
+
+What do you think is a reasonable value for the mean and variance for the counts of customers that come in to Edward's coffee shot between 3pm and 5pm (round to the nearest integer)? 
+
+## Answer 4.2
+Mean = 50
+Variance = 50
+
+## Question 4.3 
+
+Suppose every customer that comes into the burrito shop usually buys a burrito and a drink, at a total cost of 6 dollars. Suppose also that every customer that goes to Edward's coffee shop usually buys a coffee and a snack, at a total cost of 2 dollars. On average, how much money does each brother make from 3pm to 5pm? How much is their expected total income from 3pm to 5pm? Explain and show your calculations.
+
+## Answer 4.3
+On average, Addy's burrito shop makes (12* 6) = 72 dollars from 3-5 pm, and Edward's coffee shop makes (50* 2) = 100 dollars from 3-5 pm. We can calculate the average amount of money each brother makes from 3 - 5 pm by multiplying the average amounts of goods sold at their respective shops with the total amount of money each customer spends on these goods, since the graphs demonstrate the distribution of the number of customers who visit the shops from 3 - 5 pm. Expected total income from 3-5 pm = 72+100 = 172 dollars.
+
+## Question 4.4
+
+Assuming that the two businesses are independent of each other, what is the variance of the combined earnings of Addy and Edward from 3pm to 5pm? Explain and show your calculations.
+
+## Answer 4.4
+Let Addy's combined Variance be Var(6*B)
+Let Edward's Variance be Var(2*C)
+Variance of Combined earnings = Var(6B + 2C)
+                              = 36* Var(B) + 4* Var(C)
+                              = 36* 11 + 4* 50
+                              = 596
+
+# Question 5 
+
+## Question 5.1 
+
+Give an example (other than those used in lectures / quizzes) of something you could model using a negative binomial distribution. Explain (Max 4 sentences)
+
+## Answer 5.1
+Shuffling, picking and replacing from a deck of Uno cards until you have extracted two red cards consecutively. The experiment consists of an unknown number of repeated trials (the number of cards you must extract until you get two consecutive red cards), and each trial can result in just two possible outcomes (either a red card as success, or a non-red card as failure) The probability of success, denoted by p, is the same on every trial and the trials are independent; that is, the outcome on one trial does not affect the outcome on other trials and the experiment continues until the condition for success is met.
+
+## Question 5.2
+
+Give an example (other than those used in lectures / quizzes) of something that could be modelled using a uniform distibution.  Explain (Max 2 sentences)
+
+## Answer 5.2
+Handing pamphlets out to random people on the street. This is an example of uniform distribution because every possible outcome has an equal likelihood of happening, the probability is constant, and there is no finite values, since the number of people passing by is not predictable. 
+
+## Question 5.3
+
+Give an example (other than those used in lectures / quizzes) of something that could be modelled using a discrete uniform distribution.  Explain (Max 2 sentences)
+
+## Answer 5.3
+A discrete uniform distribution is a statistical distribution where the probability of outcomes is equally likely and with finite values. An example of a discrete uniform distribution would be the possible outcomes of rolling a 6-sided die and each of the six numbers has an equal chance of appearing. Therefore, each time the 6-sided die is thrown, each side has a chance of 1/6.
